@@ -1,6 +1,6 @@
 # A_raylib_test_with_my_API_design <br>
 HOW TO USE: <br>
-pls read the module_app_core.h, all the func you can use is in there, which is not finished, still on the way getting all the useful func in raylib.h and convert in to my version. <br>
+pls read the module_app_core.h, all the funcs you can use is in there, which is not finished, still on the way getting all the useful funcs in raylib.h and converting it to my version. <br>
 <br>
 HOW TO BUILD: <br>
 linux only: <br>
