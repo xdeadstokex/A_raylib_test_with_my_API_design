@@ -11,10 +11,6 @@
 #include <time.h>
 
 
-// default text, better struct style { int a[64];...
-// move todo to end of file
-
-
 // NOTE
 // naming convention:
 // "signal": input 0,1 : off,on
@@ -95,8 +91,6 @@ double scale_w; double scale_h;
 int reset_flip_mode; // for case when flip img is temporary
 int flip_mode; // 0: non, 1: horizontal, 2: vertical
 
-double rotation_angle_rad; // default: 0
-
 int scale_mode; //
 int blend_mode; //
 
@@ -137,46 +131,24 @@ void draw_img(struct imgs* img, double x, double y);
 void draw_img_centralized(struct imgs* img, double x, double y);
 void draw_img_centralized_rotate(struct imgs* img, double x, double y, double angle_rad);
 ////////////////////////TEXT_RENDER_SECTION////////////////////////
+// WIP
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////GUI_DATA_AREA////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-struct buttons{
-struct box_2d hit_area;
-struct box_2d visual_area;
-
-double visual_area_offset_x;
-double visual_area_offset_y;
-
+/////////////////////////////////////////////////
+//////////////GUI_HELPER_SECTION/////////////////
+/////////////////////////////////////////////////
+struct clicks{
 int state;
 int signal_last;
-
-double value;  // multipurpose: hold duration, haptic intensity, slider position, etc.
 };
 
+void reset_click(struct clicks* click);
+void update_click_hold(struct clicks* click, int signal);
+void update_click_switch(struct clicks* click, int signal);
 
-struct sliders{
-struct box_2d hit_area;
-struct box_2d visual_area;
-struct box_2d bounding_area;
-
-double x_offset_begin;
-double y_offset_begin;
-double x_offset_end;
-double y_offset_end;
-
-double visual_area_offset_x;
-double visual_area_offset_y;
-
-int state;
-
-double value_x;
-double value_y;
-};
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////IO_DATA_AREA////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
+void update_click_once(struct clicks* click, int signal);
+/////////////////////////////////////////////////
+//////////////////IO_SECTION/////////////////////
+/////////////////////////////////////////////////
 struct io_data{
 int quit;
 
@@ -224,10 +196,22 @@ int mouse_scroll_vertical;
 int mouse_scroll_x;
 int mouse_scroll_y;
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////IO_FUNC_AREA////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 void init_io_data(struct io_data* io);
 void get_io_signal(struct io_data* io, int mouse_signal, int kb_signal);
+
+/////////////////////////////////////////////////
+////////////////TIME_SECTION/////////////////////
+/////////////////////////////////////////////////
+struct timers{
+double time_current;
+double time_last;
+double delta_time;
+};
+
+void reset_timer(struct timers* timer);
+void update_timer(struct timers* timer);
+int check_timer_delta_time_passed(struct timers* timer, double tagret_delta_time); // since last call of this func
+
 #endif
 

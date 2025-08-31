@@ -130,7 +130,6 @@ img->w = texture.width; img->h = texture.height;
 //    int format;             // Data format (PixelFormat type)
 // later
 
-img->rotation_angle_rad = 0;
 img->draw_mode = 1;
 return 1;
 }
@@ -150,8 +149,38 @@ DrawTexture(*((Texture*)img->data_vram), x - img->w / 2, get_window_h() - y - im
 void draw_img_centralized_rotate(struct imgs* img, double x, double y, double angle_rad){
 DrawTexturePro(*((Texture*)img->data_vram), (Rectangle){0, 0, img->w, img->h}, (Rectangle){x, get_window_h() - y, img->w, img->h}, (Vector2){img->w / 2, img->h / 2}, angle_rad * 180 / PI, (Color){0xFF, 0xFF, 0xFF, 0xFF});
 }
+
+
 /////////////////////////////////////////////////
-/////////////////////IO_AREA/////////////////////
+//////////////GUI_HELPER_SECTION/////////////////
+/////////////////////////////////////////////////
+void reset_click(struct clicks* click){
+click->state = 0;
+click->signal_last = 0;
+return;
+}
+
+void update_click_hold(struct clicks* click, int signal){
+click->state = signal;
+return;
+}
+
+void update_click_switch(struct clicks* click, int signal){
+if(signal && !click->signal_last){ click->state = !click->state; }
+click->signal_last = signal;
+return;
+}
+
+void update_click_once(struct clicks* click, int signal){
+if(signal == 1){
+if(click->signal_last == 1){ click->state = 0; }
+else{ click->state = 1; }
+}
+click->signal_last = signal;
+return;
+}
+/////////////////////////////////////////////////
+//////////////////IO_SECTION/////////////////////
 /////////////////////////////////////////////////
 void init_io_data(struct io_data* io){
 if(io != NULL) memset(io, 0x00, sizeof(struct io_data));
@@ -184,3 +213,33 @@ io->key_arrow_right = IsKeyDown(KEY_RIGHT);
 
 }
 }
+
+
+
+/////////////////////////////////////////////////
+////////////////TIME_SECTION/////////////////////
+/////////////////////////////////////////////////
+void reset_timer(struct timers* timer){
+timer->time_current = GetTime();
+timer->time_last = GetTime();
+timer->delta_time = 0;
+return;
+}
+
+void update_timer(struct timers* timer){
+timer->time_current = GetTime();
+timer->delta_time = timer->time_current - timer->time_last;
+return;
+}
+
+int check_timer_delta_time_passed(struct timers* timer, double tagret_delta_time_second){
+//if(timer == NULL){ printf("time debug %f\n", GetTime()); }
+
+if(timer == NULL){ return 0; }
+return  (timer->delta_time >= tagret_delta_time_second);
+}
+
+
+
+
+
